@@ -1,3 +1,12 @@
+```bash
+# Extensions
+
+1. tabnine
+2. prettier
+3. code lense
+```
+
+
 ```json
 {
     "tabnine.experimentalAutoImports": true,

@@ -75,6 +75,24 @@ dimensions = {
        InstanceId = aws_instance.demo.id
      }
 }
+ resource "aws_cloudwatch_metric_alarm" "ec2memory" {
+    for_each                  = toset(local.instanceIdLists)
+    alarm_name                = "${each.value}-memory-utilization"
+    comparison_operator       = "GreaterThanOrEqualToThreshold"
+    evaluation_periods        = "2"
+    metric_name               = "mem_used_percent"
+    namespace                 = "CWAgent"
+    period                    = "120"
+    statistic                 = "Average"
+    threshold                 = "90"
+    alarm_description         = "This metric monitors ${each.value} ec2 memory utilization"
+    insufficient_data_actions = []
+    dimensions = {
+      InstanceId = each.value
+    }
+    alarm_actions = [aws_sns_topic.ast.arn]
+    ok_actions    = [aws_sns_topic.ast.arn]
+  }
 
 variable "roleName" {
   default = "ssmcloud-instance"
